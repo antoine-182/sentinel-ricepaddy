@@ -1,0 +1,12 @@
+[project]
+name = "ricepaddy"
+version = "0.1.0"
+description = "Detect flooding and drying of rice paddies (AWD) from Sentinel-1 SAR time series"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"

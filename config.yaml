@@ -1,0 +1,47 @@
+# Chapter 1: one Sentinel-1 orbit direction. Chapter 2 (both orbits): config_ch2.yaml
+run_name: real               # results -> outputs/<run_name>/, figures -> docs/assets/ (ch.1) or docs/assets/<run_name>/
+
+# Area of interest: rice district of Thoai Son, An Giang province (Mekong Delta, Vietnam).
+# About 16 x 16 km. Change the bbox to move or enlarge the study area.
+aoi:
+  name: an_giang_thoai_son
+  bbox: [105.20, 10.25, 105.35, 10.40]   # lon_min, lat_min, lon_max, lat_max (WGS84)
+  crs: EPSG:32648                         # UTM zone 48N
+  resolution: 20                          # metres
+
+# Winter-Spring crop (dry season): irrigation is managed, AWD is relevant,
+# and Sentinel-2 sees more cloud-free scenes, so we get more labels.
+period:
+  start: "2024-11-01"
+  end: "2025-04-30"
+
+sentinel1:
+  orbits: single             # single | both
+  normalize: none            # none | per_orbit
+
+sentinel2:
+  max_cloud_cover: 60        # scene-level filter; pixels are masked again with SCL
+labels:
+  max_days_apart: 3          # max gap between a Sentinel-1 date and its Sentinel-2 label date
+                             # (1 day gave only 3/17 labelled dates in the Mekong AOI)
+  water_threshold: 0.0       # MNDWI > this -> water
+  dry_threshold: -0.2        # MNDWI < this -> not water; values in between are left unlabeled
+
+awd:
+  # one crop window (Winter-Spring crop), so the re-flooding for the next crop is not counted
+  crop_start: "2024-11-01"
+  crop_end: "2025-03-25"
+  min_dry_dates: 1           # 2 = ignore dry spells seen on a single image (often classifier noise)
+  majority_px: 1             # 3 or 5 = spatial majority vote on the water map before counting (removes speckle)
+
+crossval:
+  block_size_px: 64          # 64 px x 20 m = 1.28 km spatial blocks
+  n_splits: 5
+  max_train_samples: 300000
+  seed: 0
+
+paths:
+  s1: data/s1.zarr
+  s2: data/s2.zarr
+  labels: data/labels.zarr
+  outputs: outputs

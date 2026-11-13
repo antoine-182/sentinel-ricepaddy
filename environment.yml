@@ -1,0 +1,22 @@
+name: ricepaddy
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - xarray
+  - dask
+  - bottleneck   # needed by xarray .ffill()
+  - zarr
+  - scikit-learn
+  - matplotlib
+  - pyyaml
+  - jupyterlab
+  - ipykernel
+  - pytest
+  - pip
+  - pip:
+      - pystac-client
+      - planetary-computer
+      - odc-stac
+      - torch        # for the next step (temporal deep model), not used by the baseline
